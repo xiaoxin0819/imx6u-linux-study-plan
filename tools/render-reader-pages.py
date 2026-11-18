@@ -10,30 +10,40 @@ from pathlib import Path
 import os
 
 import pypdfium2 as pdfium
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
 BOOKS = {"app": ("application.pdf", 1115), "drv": ("drivers.pdf", 1963)}
 WIDTH = 1100
+PREVIEW_WIDTH = 680
 CHUNK_SIZE = 48
 
 
 def render_pages(job):
     book, first, last = job
     destination = ROOT / "pdf" / "pages-v1" / book
+    previews = ROOT / "pdf" / "thumbs-v1" / book
     with pdfium.PdfDocument(ROOT / "pdf" / BOOKS[book][0]) as document:
         for index in range(first, last):
             with closing(document[index]) as page:
                 bitmap = page.render(scale=WIDTH / page.get_width(), draw_annots=True)
+                filename = f"{index + 1}.webp"
+                target = destination / filename
                 try:
                     bitmap.to_pil().save(
-                        destination / f"{index + 1}.webp",
+                        target,
                         format="WEBP",
                         quality=82,
                         method=3,
                     )
                 finally:
                     bitmap.close()
+                with Image.open(target) as image:
+                    preview_height = round(image.height * PREVIEW_WIDTH / image.width)
+                    image.resize((PREVIEW_WIDTH, preview_height), Image.Resampling.LANCZOS).save(
+                        previews / filename, format="WEBP", quality=77, method=2,
+                    )
     return last - first
 
 
@@ -49,6 +59,7 @@ def main():
             if len(document) != expected_pages:
                 raise ValueError(f"{filename}: expected {expected_pages} pages, got {len(document)}")
         (ROOT / "pdf" / "pages-v1" / book).mkdir(parents=True, exist_ok=True)
+        (ROOT / "pdf" / "thumbs-v1" / book).mkdir(parents=True, exist_ok=True)
         for first in range(0, expected_pages, CHUNK_SIZE):
             jobs.append((book, first, min(first + CHUNK_SIZE, expected_pages)))
 

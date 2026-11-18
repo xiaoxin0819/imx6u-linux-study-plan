@@ -5,7 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>I.MX6U 嵌入式 Linux 应用与驱动开发 60 天逐日精修计划</title>
   <style>
-    /* Tier 3 · Utilitarian (Embedded Linux Engineering Curriculum) · Answer-first split hero + full-width architectural cutaway · 8-module overview table -> workload SVG -> daily 8h protocol table & lab schematic -> cumulative trajectory SVG -> 60-day exhaustive open-canvas hairline ledger (App D01-D21, full-bleed milestone band, Driver D22-D60) · Fonts: IBM Plex Sans + Noto Sans SC + IBM Plex Mono · Palette: Crisp White #FFFFFF + Deep Slate #11161C + Cobalt #0F62FE/#0043CE + Teal #0E7490/#094C61 · Image radius: 0px · Emphasis moment: 68px 60-day numeral · Signature element: 12-column open-canvas daily subsection ledger · Charts: horizontal module workload bar SVG + 60-day cumulative page trajectory SVG */
+    @font-face {
+      font-family: 'Plan Latin';
+      src: url('assets/fonts/plan-latin.woff2') format('woff2');
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Plan Han';
+      src: url('assets/fonts/plan-han.woff2') format('woff2');
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Plan Mono';
+      src: url('assets/fonts/plan-mono.woff2') format('woff2');
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+
+    /* Tier 3 · Utilitarian (Embedded Linux Engineering Curriculum) · Answer-first split hero + full-width architectural cutaway · 8-module overview table -> workload SVG -> daily 8h protocol table & lab schematic -> cumulative trajectory SVG -> 60-day exhaustive open-canvas hairline ledger (App D01-D21, full-bleed milestone band, Driver D22-D60) · Fonts: Plan Latin + Plan Han + Plan Mono · Palette: Crisp White #FFFFFF + Deep Slate #11161C + Cobalt #0F62FE/#0043CE + Teal #0E7490/#094C61 · Image radius: 0px · Emphasis moment: 68px 60-day numeral · Signature element: 12-column open-canvas daily subsection ledger · Charts: horizontal module workload bar SVG + 60-day cumulative page trajectory SVG */
     :root {
       --paper: #FFFFFF;
       --ink: #11161C;
@@ -56,7 +80,7 @@
     }
 
     .toc-label {
-      font-family: 'IBM Plex Mono', 'Noto Sans SC', monospace;
+      font-family: 'Plan Mono', 'Plan Han', monospace;
       font-size: 12.5px;
       font-weight: 600;
       color: var(--ink);
@@ -99,7 +123,7 @@
 
     .toc-phase-range {
       color: var(--mute);
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plan Mono', monospace;
       font-size: 12px;
     }
 
@@ -119,7 +143,7 @@
     }
 
     .day-jump {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plan Mono', monospace;
       font-size: 13px;
       font-weight: 500;
       padding: 1px 0;
@@ -135,7 +159,7 @@
     }
 
     .back-toc {
-      font-family: 'IBM Plex Mono', 'Noto Sans SC', monospace;
+      font-family: 'Plan Mono', 'Plan Han', monospace;
       font-size: 12.5px;
       color: var(--mute);
     }
@@ -153,7 +177,7 @@
     body {
       background: var(--paper);
       color: var(--ink);
-      font-family: 'IBM Plex Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Plan Latin', 'Plan Han', -apple-system, BlinkMacSystemFont, sans-serif;
       font-size: 16px;
       line-height: 1.65;
       letter-spacing: 0;
@@ -240,7 +264,7 @@
     }
 
     .emphasis-num {
-      font-family: 'IBM Plex Sans', sans-serif;
+      font-family: 'Plan Latin', sans-serif;
       font-size: clamp(32px, 3.4vw, 60px);
       line-height: 1.02;
       font-weight: 700;
@@ -315,7 +339,7 @@
     }
 
     table.open-table thead th {
-      font-family: 'IBM Plex Mono', 'Noto Sans SC', monospace;
+      font-family: 'Plan Mono', 'Plan Han', monospace;
       font-size: 12.5px;
       font-weight: 600;
       color: var(--mute);
@@ -343,7 +367,7 @@
     table.open-table th.num,
     table.open-table td.num {
       text-align: right;
-      font-family: 'IBM Plex Mono', 'Noto Sans SC', monospace;
+      font-family: 'Plan Mono', 'Plan Han', monospace;
       font-size: 13.5px;
     }
 
@@ -384,7 +408,7 @@
       left: 0;
       top: 14px;
       color: var(--accent-text);
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plan Mono', monospace;
       font-weight: 600;
     }
 
@@ -464,7 +488,7 @@
       border-top: 2px solid var(--ink);
       border-bottom: 2px solid var(--ink);
       margin-top: 24px;
-      font-family: 'IBM Plex Mono', 'Noto Sans SC', monospace;
+      font-family: 'Plan Mono', 'Plan Han', monospace;
       font-size: 12.5px;
       font-weight: 600;
       color: var(--mute);
@@ -497,7 +521,7 @@
     }
 
     .day-meta {
-      font-family: 'IBM Plex Mono', 'Noto Sans SC', monospace;
+      font-family: 'Plan Mono', 'Plan Han', monospace;
       font-size: 12.5px;
       color: var(--accent-text);
       font-weight: 500;
@@ -571,7 +595,7 @@
     }
 
     .pg {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plan Mono', monospace;
       font-size: 12px;
       color: var(--mute);
       white-space: nowrap;
@@ -704,7 +728,7 @@
 
     .sidebar-day-code {
       color: var(--mute);
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Plan Mono', monospace;
     }
 
     .sidebar-nav a[aria-current="location"] .sidebar-day-code { color: inherit; }
@@ -1156,40 +1180,40 @@
         <div class="fig-title">第四篇 ARM Linux 驱动开发以 152 学时占据全周期近三分之一，是决定内核工程深度的核心战役</div>
         <svg viewBox="0 0 700 460" width="100%" role="img" aria-label="八大模块学时分配横向条形图">
 <line x1="228.0" y1="28" x2="228.0" y2="418" stroke="#D5DCE4" stroke-width="1"/>
-<text x="228.0" y="18" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">0h</text>
+<text x="228.0" y="18" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">0h</text>
 <line x1="314.0" y1="28" x2="314.0" y2="418" stroke="#D5DCE4" stroke-width="1"/>
-<text x="314.0" y="18" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">40h</text>
+<text x="314.0" y="18" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">40h</text>
 <line x1="400.0" y1="28" x2="400.0" y2="418" stroke="#D5DCE4" stroke-width="1"/>
-<text x="400.0" y="18" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">80h</text>
+<text x="400.0" y="18" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">80h</text>
 <line x1="486.0" y1="28" x2="486.0" y2="418" stroke="#D5DCE4" stroke-width="1"/>
-<text x="486.0" y="18" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">120h</text>
+<text x="486.0" y="18" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">120h</text>
 <line x1="572.0" y1="28" x2="572.0" y2="418" stroke="#D5DCE4" stroke-width="1"/>
-<text x="572.0" y="18" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">160h</text>
-<text x="214" y="63" text-anchor="end" fill="#11161C" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="14" font-weight="500">应用 · 第一篇 入门篇</text>
+<text x="572.0" y="18" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">160h</text>
+<text x="214" y="63" text-anchor="end" fill="#11161C" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="14" font-weight="500">应用 · 第一篇 入门篇</text>
 <rect x="228" y="48" width="172.0" height="22" fill="#0E7490"/>
-<text x="410.0" y="64" text-anchor="start" fill="#094C61" font-family="'IBM Plex Mono', monospace" font-size="13.5" font-weight="600">80h (10天)</text>
-<text x="214" y="110" text-anchor="end" fill="#11161C" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="14" font-weight="500">应用 · 第二篇 提高篇</text>
+<text x="410.0" y="64" text-anchor="start" fill="#094C61" font-family="'Plan Mono', monospace" font-size="13.5" font-weight="600">80h (10天)</text>
+<text x="214" y="110" text-anchor="end" fill="#11161C" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="14" font-weight="500">应用 · 第二篇 提高篇</text>
 <rect x="228" y="95" width="137.6" height="22" fill="#0E7490"/>
-<text x="375.6" y="111" text-anchor="start" fill="#094C61" font-family="'IBM Plex Mono', monospace" font-size="13.5" font-weight="600">64h (8天)</text>
-<text x="214" y="157" text-anchor="end" fill="#11161C" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="14" font-weight="500">应用 · 第三篇 进阶篇</text>
+<text x="375.6" y="111" text-anchor="start" fill="#094C61" font-family="'Plan Mono', monospace" font-size="13.5" font-weight="600">64h (8天)</text>
+<text x="214" y="157" text-anchor="end" fill="#11161C" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="14" font-weight="500">应用 · 第三篇 进阶篇</text>
 <rect x="228" y="142" width="51.6" height="22" fill="#0E7490"/>
-<text x="289.6" y="158" text-anchor="start" fill="#094C61" font-family="'IBM Plex Mono', monospace" font-size="13.5" font-weight="600">24h (3天)</text>
-<text x="214" y="204" text-anchor="end" fill="#11161C" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="14" font-weight="500">驱动 · 第一篇 Ubuntu入门篇</text>
+<text x="289.6" y="158" text-anchor="start" fill="#094C61" font-family="'Plan Mono', monospace" font-size="13.5" font-weight="600">24h (3天)</text>
+<text x="214" y="204" text-anchor="end" fill="#11161C" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="14" font-weight="500">驱动 · 第一篇 Ubuntu入门篇</text>
 <rect x="228" y="189" width="34.4" height="22" fill="#0F62FE"/>
-<text x="272.4" y="205" text-anchor="start" fill="#0043CE" font-family="'IBM Plex Mono', monospace" font-size="13.5" font-weight="600">16h (2天)</text>
-<text x="214" y="251" text-anchor="end" fill="#11161C" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="14" font-weight="500">驱动 · 第二篇 裸机开发篇</text>
+<text x="272.4" y="205" text-anchor="start" fill="#0043CE" font-family="'Plan Mono', monospace" font-size="13.5" font-weight="600">16h (2天)</text>
+<text x="214" y="251" text-anchor="end" fill="#11161C" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="14" font-weight="500">驱动 · 第二篇 裸机开发篇</text>
 <rect x="228" y="236" width="154.8" height="22" fill="#0F62FE"/>
-<text x="392.8" y="252" text-anchor="start" fill="#0043CE" font-family="'IBM Plex Mono', monospace" font-size="13.5" font-weight="600">72h (9天)</text>
-<text x="214" y="298" text-anchor="end" fill="#11161C" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="14" font-weight="500">驱动 · 第三篇 系统移植篇</text>
+<text x="392.8" y="252" text-anchor="start" fill="#0043CE" font-family="'Plan Mono', monospace" font-size="13.5" font-weight="600">72h (9天)</text>
+<text x="214" y="298" text-anchor="end" fill="#11161C" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="14" font-weight="500">驱动 · 第三篇 系统移植篇</text>
 <rect x="228" y="283" width="120.4" height="22" fill="#0F62FE"/>
-<text x="358.4" y="299" text-anchor="start" fill="#0043CE" font-family="'IBM Plex Mono', monospace" font-size="13.5" font-weight="600">56h (7天)</text>
-<text x="214" y="345" text-anchor="end" fill="#11161C" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="14" font-weight="500">驱动 · 第四篇 Linux驱动开发篇</text>
+<text x="358.4" y="299" text-anchor="start" fill="#0043CE" font-family="'Plan Mono', monospace" font-size="13.5" font-weight="600">56h (7天)</text>
+<text x="214" y="345" text-anchor="end" fill="#11161C" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="14" font-weight="500">驱动 · 第四篇 Linux驱动开发篇</text>
 <rect x="228" y="330" width="326.8" height="22" fill="#0F62FE"/>
-<text x="564.8" y="346" text-anchor="start" fill="#0043CE" font-family="'IBM Plex Mono', monospace" font-size="13.5" font-weight="600">152h (19天)</text>
-<text x="214" y="392" text-anchor="end" fill="#11161C" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="14" font-weight="500">驱动 · 附录A/B/C 工程进阶篇</text>
+<text x="564.8" y="346" text-anchor="start" fill="#0043CE" font-family="'Plan Mono', monospace" font-size="13.5" font-weight="600">152h (19天)</text>
+<text x="214" y="392" text-anchor="end" fill="#11161C" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="14" font-weight="500">驱动 · 附录A/B/C 工程进阶篇</text>
 <rect x="228" y="377" width="34.4" height="22" fill="#0F62FE"/>
-<text x="272.4" y="393" text-anchor="start" fill="#0043CE" font-family="'IBM Plex Mono', monospace" font-size="13.5" font-weight="600">16h (2天)</text>
-<text x="228" y="446" fill="#465161" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="13">横轴单位：投入学时（按每日 8 小时计，青色为前 21 天应用编程，蓝色为后 39 天驱动开发）</text>
+<text x="272.4" y="393" text-anchor="start" fill="#0043CE" font-family="'Plan Mono', monospace" font-size="13.5" font-weight="600">16h (2天)</text>
+<text x="228" y="446" fill="#465161" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="13">横轴单位：投入学时（按每日 8 小时计，青色为前 21 天应用编程，蓝色为后 39 天驱动开发）</text>
 </svg>
         <figcaption>数据来源：《【正点原子】I.MX6U嵌入式Linux C应用编程指南V1.6.pdf》（P20–P1115）与《【正点原子】I.MX6U嵌入式Linux驱动开发指南V2.0.1.pdf》（P7–P1963）完整书签目录测算。</figcaption>
       </figure>
@@ -1213,41 +1237,41 @@
       <div class="fig-title">六十天学习斜率随代码密度动态调速，在三大关键节点完成从应用工程师到内核驱动工程师的跃迁</div>
       <svg viewBox="0 0 700 400" width="100%" role="img" aria-label="60天累计学习页数与关键里程碑推进曲线">
 <line x1="68" y1="346.0" x2="604" y2="346.0" stroke="#D5DCE4" stroke-width="1"/>
-<text x="58" y="350.0" text-anchor="end" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">0</text>
+<text x="58" y="350.0" text-anchor="end" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">0</text>
 <line x1="68" y1="267.5" x2="604" y2="267.5" stroke="#D5DCE4" stroke-width="1"/>
-<text x="58" y="271.5" text-anchor="end" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">800</text>
+<text x="58" y="271.5" text-anchor="end" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">800</text>
 <line x1="68" y1="189.0" x2="604" y2="189.0" stroke="#D5DCE4" stroke-width="1"/>
-<text x="58" y="193.0" text-anchor="end" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">1600</text>
+<text x="58" y="193.0" text-anchor="end" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">1600</text>
 <line x1="68" y1="110.5" x2="604" y2="110.5" stroke="#D5DCE4" stroke-width="1"/>
-<text x="58" y="114.5" text-anchor="end" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">2400</text>
+<text x="58" y="114.5" text-anchor="end" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">2400</text>
 <line x1="68" y1="32.0" x2="604" y2="32.0" stroke="#D5DCE4" stroke-width="1"/>
-<text x="58" y="36.0" text-anchor="end" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">3200</text>
+<text x="58" y="36.0" text-anchor="end" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">3200</text>
 <line x1="76.9" y1="346" x2="76.9" y2="352" stroke="#222C38" stroke-width="1"/>
-<text x="76.9" y="368" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">D01</text>
+<text x="76.9" y="368" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">D01</text>
 <line x1="157.3" y1="346" x2="157.3" y2="352" stroke="#222C38" stroke-width="1"/>
-<text x="157.3" y="368" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">D10</text>
+<text x="157.3" y="368" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">D10</text>
 <line x1="255.6" y1="346" x2="255.6" y2="352" stroke="#222C38" stroke-width="1"/>
-<text x="255.6" y="368" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">D21</text>
+<text x="255.6" y="368" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">D21</text>
 <line x1="353.9" y1="346" x2="353.9" y2="352" stroke="#222C38" stroke-width="1"/>
-<text x="353.9" y="368" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">D32</text>
+<text x="353.9" y="368" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">D32</text>
 <line x1="416.4" y1="346" x2="416.4" y2="352" stroke="#222C38" stroke-width="1"/>
-<text x="416.4" y="368" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">D39</text>
+<text x="416.4" y="368" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">D39</text>
 <line x1="514.7" y1="346" x2="514.7" y2="352" stroke="#222C38" stroke-width="1"/>
-<text x="514.7" y="368" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">D50</text>
+<text x="514.7" y="368" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">D50</text>
 <line x1="604.0" y1="346" x2="604.0" y2="352" stroke="#222C38" stroke-width="1"/>
-<text x="604.0" y="368" text-anchor="middle" fill="#465161" font-family="'IBM Plex Mono', monospace" font-size="13">D60</text>
+<text x="604.0" y="368" text-anchor="middle" fill="#465161" font-family="'Plan Mono', monospace" font-size="13">D60</text>
 <polyline fill="none" stroke="#0E7490" stroke-width="3" points="68.0,346.0 76.9,342.1 85.9,337.9 94.8,334.0 103.7,328.9 112.7,323.1 121.6,317.7 130.5,311.0 139.5,305.6 148.4,300.8 157.3,297.7 166.3,292.5 175.2,286.2 184.1,279.6 193.1,275.4 202.0,270.7 210.9,264.7 219.9,258.9 228.8,255.3 237.7,246.9 246.7,240.1 255.6,238.5"/>
 <polyline fill="none" stroke="#0F62FE" stroke-width="3" points="255.6,238.5 264.5,228.4 273.5,223.9 282.4,217.3 291.3,210.9 300.3,205.4 309.2,199.3 318.1,193.6 327.1,187.6 336.0,181.1 344.9,176.8 353.9,170.9 362.8,166.5 371.7,161.8 380.7,156.4 389.6,149.8 398.5,145.0 407.5,140.1 416.4,135.8 425.3,131.8 434.3,126.3 443.2,122.0 452.1,117.2 461.1,112.1 470.0,108.2 478.9,104.6 487.9,100.1 496.8,97.1 505.7,93.7 514.7,88.2 523.6,84.5 532.5,78.9 541.5,73.9 550.4,70.8 559.3,67.1 568.3,62.9 577.2,59.7 586.1,53.6 595.1,49.3 604.0,46.4"/>
 <line x1="255.6" y1="238.5" x2="255.6" y2="346" stroke="#D5DCE4" stroke-dasharray="4 4" stroke-width="1"/>
 <circle cx="255.6" cy="238.5" r="5" fill="#094C61"/>
-<text x="241.6" y="226.5" text-anchor="end" fill="#094C61" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="13.5" font-weight="600">D21 应用通关 (1,096页)</text>
+<text x="241.6" y="226.5" text-anchor="end" fill="#094C61" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="13.5" font-weight="600">D21 应用通关 (1,096页)</text>
 <line x1="416.4" y1="135.8" x2="416.4" y2="346" stroke="#D5DCE4" stroke-dasharray="4 4" stroke-width="1"/>
 <circle cx="416.4" cy="135.8" r="5" fill="#0043CE"/>
-<text x="402.4" y="123.8" text-anchor="end" fill="#0043CE" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="13.5" font-weight="600">D39 移植贯通 (2,142页)</text>
+<text x="402.4" y="123.8" text-anchor="end" fill="#0043CE" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="13.5" font-weight="600">D39 移植贯通 (2,142页)</text>
 <line x1="604.0" y1="46.4" x2="604.0" y2="346" stroke="#D5DCE4" stroke-dasharray="4 4" stroke-width="1"/>
 <circle cx="604.0" cy="46.4" r="5" fill="#0043CE"/>
-<text x="614.0" y="51.4" text-anchor="start" fill="#0043CE" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="13.5" font-weight="600">D60 全栈收官 (3,053页)</text>
-<text x="68" y="392" fill="#465161" font-family="'IBM Plex Sans', 'Noto Sans SC', sans-serif" font-size="13">纵轴：累计精读与实验教材正文页数（页） · 横轴：第 1 天至第 60 天学习日程</text>
+<text x="614.0" y="51.4" text-anchor="start" fill="#0043CE" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="13.5" font-weight="600">D60 全栈收官 (3,053页)</text>
+<text x="68" y="392" fill="#465161" font-family="'Plan Latin', 'Plan Han', sans-serif" font-size="13">纵轴：累计精读与实验教材正文页数（页） · 横轴：第 1 天至第 60 天学习日程</text>
 </svg>
       <figcaption>推进节奏说明：D01–D21 完成《应用编程指南》全部 1,096 页正文；D22–D39 完成 Ubuntu、裸机与系统移植 1,046 页；D40–D60 集中火力攻克 911 页内核驱动与工程附录。</figcaption>
     </figure>
@@ -3040,7 +3064,7 @@
     </footer>
   </main>
 
-  <script src="mobile-pdf-links.js?v=3" defer></script>
+  <script src="mobile-pdf-links.js?v=4" defer></script>
   <script>
     (() => {
       const shell = document.querySelector('.sidebar-shell');

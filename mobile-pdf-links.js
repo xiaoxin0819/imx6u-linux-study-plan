@@ -28,7 +28,7 @@
     if (day) params.set("day", day);
 
     nativeHrefs.set(link, original);
-    link.setAttribute("href", "reader.html?" + params + "&v=2");
+    link.setAttribute("href", "reader.html?" + params + "&v=3");
     link.target = "_self";
   }
 

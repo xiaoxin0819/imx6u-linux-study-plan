@@ -117,7 +117,7 @@ button, input { color: inherit; font: inherit; }
 .control-group button:focus-visible,
 .toolbar-title a:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
 
-.page-index {
+.page-index, .zoom-index {
   display: flex;
   align-items: center;
   gap: 3px;
@@ -127,7 +127,7 @@ button, input { color: inherit; font: inherit; }
   font-variant-numeric: tabular-nums;
 }
 
-#page-number {
+#page-number, #zoom-percent {
   width: 4.2ch;
   height: 34px;
   padding: 0;
@@ -138,13 +138,17 @@ button, input { color: inherit; font: inherit; }
   text-align: center;
 }
 
-#page-number:focus { outline: 1px solid var(--teal); }
+#page-number:focus, #zoom-percent:focus { outline: 1px solid var(--teal); }
 #page-total { color: var(--muted); font-size: 12px; white-space: nowrap; }
 
+#zoom-percent { width: 3.2ch; }
+.zoom-index { gap: 2px; padding-inline: 3px 5px; }
+.zoom-index span { color: var(--muted); font-size: 12px; }
+
 #zoom-reset {
-  width: 46px;
-  border-inline: 1px solid var(--line);
-  border-radius: 0;
+  width: 38px;
+  border-inline-start: 1px solid var(--line);
+  border-radius: 0 6px 6px 0;
   background: #fff;
   font-size: 12px;
   font-weight: 600;
@@ -178,13 +182,19 @@ button, input { color: inherit; font: inherit; }
   flex: 1;
   min-height: 0;
   overflow: auto;
+  overflow-anchor: none;
+  touch-action: pan-x pan-y;
   padding: var(--gutter) max(var(--gutter), env(safe-area-inset-right)) max(var(--gutter), env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left));
 }
 
-.pdf-sheet {
+#pdf-rail {
   position: relative;
-  width: max-content;
   margin-inline: auto;
+}
+
+.pdf-sheet {
+  position: absolute;
+  inset-inline: 0;
   overflow: hidden;
   border-radius: 4px;
   background: #fff;
@@ -194,7 +204,29 @@ button, input { color: inherit; font: inherit; }
 .pdf-sheet img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+}
+
+.page-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.page-placeholder button {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #f5f8fa;
+  color: var(--teal);
+  font-size: 13px;
 }
 
 .bookmark-marker {
@@ -225,7 +257,10 @@ button, input { color: inherit; font: inherit; }
 }
 
 @media (max-width: 360px) {
-  .control-group button { width: 35px; }
+  .control-group button { width: 29px; }
+  #zoom-reset { width: 33px; }
+  .page-index { gap: 1px; padding-inline: 3px 5px; }
+  .toolbar-controls { gap: 6px; }
   .toolbar-title a { font-size: 12px; }
   .toolbar-title h1 { font-size: 14px; }
 }
