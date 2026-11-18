@@ -8,23 +8,18 @@
     (() => {
       const query = new URLSearchParams(location.search);
       const book = query.get("book");
-      const page = Number(query.get("page"));
       const limit = book === "app" ? 1115 : book === "drv" ? 1963 : 0;
-      if (!Number.isSafeInteger(page) || page < 1 || page > limit) return;
-      const gutter = Math.max(8, Math.min(24, innerWidth * 0.02));
-      const fitWidth = Math.min(880, innerWidth - 2 * gutter);
-      const full = fitWidth * (devicePixelRatio || 1) > 680;
+      if (!limit) return;
+      const page = Math.min(limit, Math.max(1, Number.parseInt(query.get("page"), 10) || 1));
       const image = document.createElement("link");
-      image.id = "first-page-image";
-      image.dataset.full = String(full);
       image.rel = "preload";
       image.as = "image";
       image.fetchPriority = "high";
-      image.href = (full ? "pdf/pages-v1/" : "pdf/thumbs-v1/") + book + "/" + page + ".webp";
+      image.href = "pdf/pages-v1/" + book + "/" + page + ".webp";
       document.head.append(image);
     })();
   </script>
-  <link rel="stylesheet" href="reader.css?v=3">
+  <link rel="stylesheet" href="reader.css?v=4">
 </head>
 <body>
   <header class="toolbar">
@@ -67,12 +62,12 @@
         </form>
       </div>
     </div>
+    <div id="status">
+      <span id="status-message" role="status" aria-live="polite">正在打开教材…</span>
+      <button type="button" id="retry" hidden>重试</button>
+    </div>
   </header>
-  <div id="status">
-    <span id="status-message" role="status" aria-live="polite">正在打开教材…</span>
-    <button type="button" id="retry" hidden>重试</button>
-  </div>
   <main id="reader-scroll" aria-label="教材页面" tabindex="0"><div id="pdf-rail"></div></main>
-  <script type="module" src="reader.mjs?v=4"></script>
+  <script type="module" src="reader.mjs?v=5"></script>
 </body>
 </html>

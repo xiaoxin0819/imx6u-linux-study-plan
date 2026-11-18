@@ -8,6 +8,7 @@ const PAGE_HEIGHT = 841.92;
 const GAP = 12;
 const MIN_ZOOM = 0.75;
 const MAX_ZOOM = 3;
+const DEFAULT_ZOOM = 1.25;
 const PREVIEW_WIDTH = 680;
 
 const byId = id => document.getElementById(id);
@@ -34,17 +35,17 @@ const rawTop = params.has("top") ? Number(params.get("top")) : NaN;
 const bookmark = Number.isFinite(rawTop) ? { page: initialPage, top: rawTop } : null;
 const mounted = new Map();
 let currentPage = initialPage;
-let zoom = 1;
+let zoom = DEFAULT_ZOOM;
 let width = 0;
 let height = 0;
 let stride = 0;
 let insetTop = 0;
 let observedWidth = 0;
-let initialized = false;
 let updateFrame = 0;
 let urlTimer;
-let loadTimer;
-let firstPageImage = byId("first-page-image");
+let activeLoad;
+let previousScrollTop = 0;
+let direction = 1;
 
 const day = params.get("day");
 if (/^day-\d{2}$/.test(day ?? "")) byId("back").href = "./#" + day;
@@ -106,33 +107,38 @@ function pageAt(y) {
 }
 
 function showWindow() {
-  const from = pageAt(scroll.scrollTop - stride * 0.65);
-  const to = pageAt(scroll.scrollTop + scroll.clientHeight + stride * 0.65);
+  const top = scroll.scrollTop;
+  const bottom = top + scroll.clientHeight;
+  const firstVisible = pageAt(top);
+  const lastVisible = pageAt(bottom - 1);
+  const ahead = clampPage(direction > 0 ? lastVisible + 1 : firstVisible - 1);
+  const from = Math.min(ahead, pageAt(top - stride * 0.65));
+  const to = Math.max(ahead, pageAt(bottom + stride * 0.65));
   for (let number = from; number <= to; number++) {
-    if (!mounted.has(number)) mount(number, number === currentPage ? "high" : "low");
+    if (!mounted.has(number)) mount(number);
   }
   for (const [number, tile] of mounted) {
     if (number >= from && number <= to) continue;
-    if (!tile.image.complete) tile.image.removeAttribute("src");
     tile.element.remove();
     mounted.delete(number);
   }
-  upgrade(mounted.get(currentPage));
+  loadWindow(firstVisible, lastVisible, ahead);
 }
 
 function scheduleWindow() {
   if (updateFrame) return;
   updateFrame = requestAnimationFrame(() => {
     updateFrame = 0;
+    const top = scroll.scrollTop;
+    if (top !== previousScrollTop) direction = Math.sign(top - previousScrollTop);
+    previousScrollTop = top;
     const bottom = scroll.scrollHeight - scroll.clientHeight;
-    const number = bottom > 0 && scroll.scrollTop >= bottom - 2
-      ? book.pages : pageAt(scroll.scrollTop + 13);
+    const number = bottom > 0 && top >= bottom - 2 ? book.pages : pageAt(top + 13);
     if (number !== currentPage) {
       setActivePage(number);
       showStatus("");
-      if (!initialized) initialized = true;
     }
-    if (initialized) showWindow();
+    showWindow();
   });
 }
 
@@ -144,89 +150,112 @@ function needsFullImage() {
   return width * (devicePixelRatio || 1) > PREVIEW_WIDTH || zoom > 1.2;
 }
 
-function upgrade(tile) {
-  if (!tile?.loaded || tile.full || tile.upgrading || !needsFullImage()) return;
-  tile.upgrading = true;
-  const nextImage = new Image();
-  nextImage.fetchPriority = "low";
-  nextImage.alt = tile.image.alt;
-  nextImage.decoding = "async";
-  nextImage.onload = async () => {
-    try { await nextImage.decode(); } catch { return; }
-    if (mounted.get(tile.number) !== tile) return;
-    tile.image.replaceWith(nextImage);
-    tile.image = nextImage;
-    tile.full = true;
-  };
-  nextImage.src = imageUrl(tile, true);
+function cancelLoad() {
+  if (!activeLoad) return;
+  clearTimeout(activeLoad.timer);
+  const { tile } = activeLoad;
+  if (!tile.image) tile.label.textContent = "等待加载第 " + tile.number + " 页…";
+  activeLoad.image.onload = null;
+  activeLoad.image.onerror = null;
+  activeLoad.image.removeAttribute("src");
+  activeLoad = null;
+}
+
+function loadWindow(firstVisible, lastVisible, ahead) {
+  const current = mounted.get(currentPage);
+  if (activeLoad && (
+    !mounted.has(activeLoad.tile.number) ||
+    (current && !current.image && !current.failed && activeLoad.tile !== current)
+  )) cancelLoad();
+  if (current?.failed) showStatus("这一页加载失败，可以重试或打开原 PDF。", true);
+  if (activeLoad) {
+    if (activeLoad.tile === current && activeLoad.slow && !current.image) {
+      showStatus("这一页加载较慢，可以重试或打开原 PDF。", true);
+    }
+    return;
+  }
+
+  if (current && !current.failed &&
+      (!current.image || (!current.full && !current.fullFailed && needsFullImage()))) {
+    load(current);
+    return;
+  }
+  // Read in scroll order, with one page of lookahead beyond the viewport.
+  const visible = [];
+  for (let number = firstVisible; number <= lastVisible; number++) visible.push(number);
+  if (direction < 0) visible.reverse();
+  const pending = [...visible, ahead].map(number => mounted.get(number))
+    .find(tile => tile && !tile.image && !tile.failed);
+  if (pending) load(pending);
 }
 
 function load(tile, force = false) {
-  const { image, placeholder, label, button } = tile;
-  tile.loaded = false;
-  tile.full = firstPageImage && tile.number === initialPage
-    ? firstPageImage.dataset.full === "true"
-    : needsFullImage();
-  if (tile.number === initialPage) firstPageImage = null;
-  tile.upgrading = false;
-  let usedFallback = false;
+  const image = new Image();
+  image.alt = book.name + "第 " + tile.number + " 页";
+  image.fetchPriority = tile.number === currentPage ? "high" : "low";
+  image.decoding = "async";
+  let full = needsFullImage();
+  let fallback = false;
   const cacheBust = force ? "?retry=" + Date.now() : "";
-  image.hidden = true;
-  placeholder.hidden = false;
-  label.textContent = "正在打开第 " + tile.number + " 页…";
-  button.hidden = true;
+  tile.failed = false;
+  tile.button.hidden = true;
+  tile.label.textContent = "正在加载第 " + tile.number + " 页…";
+  const job = { tile, image };
+  job.timer = setTimeout(() => {
+    job.slow = true;
+    if (tile.number === currentPage && !tile.image) scheduleWindow();
+  }, 7500);
+  activeLoad = job;
 
+  const finish = () => {
+    clearTimeout(job.timer);
+    activeLoad = null;
+    scheduleWindow();
+  };
   image.onload = () => {
-    if (mounted.get(tile.number) !== tile) return;
-    tile.loaded = true;
-    image.hidden = false;
-    placeholder.hidden = true;
-    if (tile.number === currentPage) {
-      clearTimeout(loadTimer);
-      showStatus("");
-      initialized = true;
-      scheduleWindow();
-    }
+    if (activeLoad !== job) return;
+    if (tile.image) tile.image.replaceWith(image);
+    else tile.element.prepend(image);
+    tile.image = image;
+    tile.full = full;
+    tile.placeholder.hidden = true;
+    if (tile.number === currentPage) showStatus("");
+    finish();
   };
   image.onerror = () => {
-    if (mounted.get(tile.number) !== tile) return;
-    if (!usedFallback) {
-      usedFallback = true;
-      // Keep the other rendition available if a request fails.
-      tile.upgrading = tile.full;
-      tile.full = !tile.full;
-      image.src = imageUrl(tile, tile.full) + cacheBust;
+    if (activeLoad !== job) return;
+    if (full) tile.fullFailed = true;
+    if (!tile.image && !fallback) {
+      fallback = true;
+      full = !full;
+      image.src = imageUrl(tile, full) + cacheBust;
       return;
     }
-    label.textContent = "这一页加载失败";
-    button.hidden = false;
-    if (tile.number === currentPage) {
-      clearTimeout(loadTimer);
-      showStatus("这一页加载失败，可以重试或打开原 PDF。", true);
-      initialized = true;
-      scheduleWindow();
+    if (!tile.image) {
+      tile.failed = true;
+      tile.label.textContent = "第 " + tile.number + " 页加载失败";
+      tile.button.hidden = false;
     }
+    finish();
   };
-  image.src = imageUrl(tile, tile.full) + cacheBust;
+  image.src = imageUrl(tile, full) + cacheBust;
 }
 
-function mount(number, priority) {
+function mount(number) {
   const element = document.createElement("div");
   element.className = "pdf-sheet";
   element.dataset.page = String(number);
-  const image = new Image();
-  image.alt = book.name + "第 " + number + " 页";
-  image.fetchPriority = priority;
-  image.decoding = "async";
   const placeholder = document.createElement("div");
   placeholder.className = "page-placeholder";
   const label = document.createElement("span");
+  label.textContent = "等待加载第 " + number + " 页…";
   const button = document.createElement("button");
   button.type = "button";
   button.textContent = "重试";
+  button.hidden = true;
   placeholder.append(label, button);
-  element.append(image, placeholder);
-  const tile = { number, element, image, placeholder, label, button, marker: null };
+  element.append(placeholder);
+  const tile = { number, element, placeholder, label, button, marker: null };
   if (bookmark?.page === number) {
     tile.marker = document.createElement("span");
     tile.marker.className = "bookmark-marker";
@@ -236,20 +265,21 @@ function mount(number, priority) {
   mounted.set(number, tile);
   place(tile);
   rail.append(element);
-  button.addEventListener("click", () => load(tile, true));
-  load(tile);
+  button.addEventListener("click", () => retryPage(tile));
 }
 
-function jumpTo(number, useBookmark = false) {
+function jumpTo(number, opening = false) {
   if (!book || !Number.isSafeInteger(number)) return;
   const target = clampPage(number);
+  if (target !== currentPage) direction = Math.sign(target - currentPage);
   setActivePage(target);
   pageInput.value = String(target);
-  if (!mounted.has(target)) mount(target, "high");
   showStatus("");
-  const offset = useBookmark && bookmark ? bookmarkOffset() - 12 : 0;
-  scroll.scrollTo(0, insetTop + (target - 1) * stride + Math.max(0, offset));
-  if (initialized) showWindow();
+  const offset = opening && bookmark ? bookmarkOffset() - 12 : 0;
+  const left = opening ? (scroll.scrollWidth - scroll.clientWidth) / 2 : scroll.scrollLeft;
+  scroll.scrollTo(left, insetTop + (target - 1) * stride + Math.max(0, offset));
+  previousScrollTop = scroll.scrollTop;
+  showWindow();
 }
 
 function reshape(factor, pointX = scroll.clientWidth / 2, pointY = scroll.clientHeight / 3) {
@@ -261,16 +291,17 @@ function reshape(factor, pointX = scroll.clientWidth / 2, pointY = scroll.client
   measure();
   scroll.scrollTop = insetTop + y * stride - pointY;
   scroll.scrollLeft += rail.getBoundingClientRect().left + x * width - xOnScreen;
+  previousScrollTop = scroll.scrollTop;
   showZoom();
-  if (initialized) scheduleWindow();
+  scheduleWindow();
 }
 
-function retryCurrent() {
-  const tile = mounted.get(currentPage);
-  if (tile) {
-    showStatus("");
-    load(tile, true);
-  }
+function retryPage(tile) {
+  if (!tile) return;
+  cancelLoad();
+  showStatus("");
+  tile.fullFailed = false;
+  load(tile, true);
 }
 
 if (book) {
@@ -283,11 +314,6 @@ if (book) {
   measure();
   showZoom();
   jumpTo(initialPage, true);
-  loadTimer = setTimeout(() => {
-    if (currentPage === initialPage && !mounted.get(initialPage)?.loaded) {
-      showStatus("连接较慢，可以重试或打开原 PDF。", true);
-    }
-  }, 7500);
   scroll.addEventListener("scroll", scheduleWindow, { passive: true });
 } else {
   showStatus("找不到这本教材。请返回计划，从章节标题重新打开。");
@@ -313,7 +339,7 @@ next.addEventListener("click", () => jumpTo(currentPage + 1));
 zoomOut.addEventListener("click", () => reshape(zoom - 0.25));
 zoomIn.addEventListener("click", () => reshape(zoom + 0.25));
 zoomReset.addEventListener("click", () => reshape(1));
-retry.addEventListener("click", retryCurrent);
+retry.addEventListener("click", () => retryPage(mounted.get(currentPage)));
 
 let pinch;
 function gesture(touches) {
@@ -346,6 +372,6 @@ window.addEventListener("resize", () => {
   clearTimeout(resizeDelay);
   resizeDelay = setTimeout(() => {
     if (book && observedWidth !== scroll.clientWidth) reshape(zoom);
-    else if (book && initialized) scheduleWindow();
+    else if (book) scheduleWindow();
   }, 100);
 });
