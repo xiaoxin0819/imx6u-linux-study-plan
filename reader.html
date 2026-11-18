@@ -4,27 +4,51 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>教材阅读 · I.MX6U Linux</title>
-  <link rel="stylesheet" href="reader.css">
+  <link rel="stylesheet" href="reader.css?v=2">
 </head>
 <body>
   <header class="toolbar">
-    <div class="toolbar-title">
-      <a id="back" href="./">‹ 计划</a>
-      <h1 id="book-title">教材阅读</h1>
-      <a id="original" hidden>原 PDF</a>
+    <div class="toolbar-inner">
+      <div class="toolbar-title">
+        <a id="back" href="./">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 4 6 8l4 4"/></svg>
+          学习计划
+        </a>
+        <h1 id="book-title">教材阅读</h1>
+        <a id="original" hidden>原 PDF
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg>
+        </a>
+      </div>
+      <form id="controls" class="toolbar-controls">
+        <div class="control-group" role="group" aria-label="页码">
+          <button type="button" id="previous" aria-label="上一页" disabled>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 4 6 8l4 4"/></svg>
+          </button>
+          <label class="page-index">
+            <input id="page-number" aria-label="跳到页码" type="text" inputmode="numeric" pattern="[0-9]+" autocomplete="off" disabled>
+            <span id="page-total" aria-hidden="true"></span>
+          </label>
+          <button type="button" id="next" aria-label="下一页" disabled>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg>
+          </button>
+        </div>
+        <div class="control-group" role="group" aria-label="缩放">
+          <button type="button" id="zoom-out" aria-label="缩小" disabled>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 8h8"/></svg>
+          </button>
+          <button type="button" id="zoom-reset" aria-label="恢复适合宽度" disabled>适宽</button>
+          <button type="button" id="zoom-in" aria-label="放大" disabled>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 8h8M8 4v8"/></svg>
+          </button>
+        </div>
+      </form>
     </div>
-    <form id="controls" class="toolbar-controls">
-      <button type="button" id="previous" aria-label="上一页" disabled>‹</button>
-      <input id="page-number" aria-label="跳到页码" type="text" inputmode="numeric" pattern="[0-9]+" autocomplete="off" disabled>
-      <span id="page-total" aria-hidden="true"></span>
-      <button type="button" id="next" aria-label="下一页" disabled>›</button>
-      <span class="controls-gap"></span>
-      <button type="button" id="zoom-out" aria-label="缩小" disabled>−</button>
-      <button type="button" id="zoom-in" aria-label="放大" disabled>+</button>
-    </form>
   </header>
-  <div id="status" role="status" aria-live="polite">正在打开教材…</div>
+  <div id="status">
+    <span id="status-message" role="status" aria-live="polite">正在打开教材…</span>
+    <button type="button" id="retry" hidden>重试</button>
+  </div>
   <main id="reader-scroll" aria-label="教材页面" aria-busy="true"></main>
-  <script type="module" src="reader.mjs"></script>
+  <script type="module" src="reader.mjs?v=2"></script>
 </body>
 </html>

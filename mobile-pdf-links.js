@@ -10,12 +10,12 @@
       targets = [...document.querySelectorAll("a.pdf-page-link")].map(link => {
         const original = link.getAttribute("href");
         const [file, page] = original.split("#page=");
-        const book = file === "pdf/application.pdf" ? "app" : "drv";
+        const book = file.split("?")[0] === "pdf/application.pdf" ? "app" : "drv";
         const params = new URLSearchParams({ book, page });
         if (link.dataset.readerTop) params.set("top", link.dataset.readerTop);
         const day = link.closest(".day-row")?.id;
         if (day) params.set("day", day);
-        return { link, original, reader: "reader.html?" + params };
+        return { link, original, reader: "reader.html?" + params + "&v=2" };
       });
     }
     for (const { link, original, reader } of targets) {
