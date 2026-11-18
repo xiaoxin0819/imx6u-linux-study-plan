@@ -44,6 +44,7 @@ let initialized = false;
 let updateFrame = 0;
 let urlTimer;
 let loadTimer;
+let firstPageImage = byId("first-page-image");
 
 const day = params.get("day");
 if (/^day-\d{2}$/.test(day ?? "")) byId("back").href = "./#" + day;
@@ -139,8 +140,12 @@ function imageUrl(tile, full) {
   return (full ? "pdf/pages-v1/" : "pdf/thumbs-v1/") + key + "/" + tile.number + ".webp";
 }
 
+function needsFullImage() {
+  return width * (devicePixelRatio || 1) > PREVIEW_WIDTH || zoom > 1.2;
+}
+
 function upgrade(tile) {
-  if (!tile?.loaded || tile.full || tile.upgrading || (zoom <= 1.2 && width <= PREVIEW_WIDTH)) return;
+  if (!tile?.loaded || tile.full || tile.upgrading || !needsFullImage()) return;
   tile.upgrading = true;
   const nextImage = new Image();
   nextImage.fetchPriority = "low";
@@ -159,8 +164,13 @@ function upgrade(tile) {
 function load(tile, force = false) {
   const { image, placeholder, label, button } = tile;
   tile.loaded = false;
-  tile.full = false;
+  tile.full = firstPageImage && tile.number === initialPage
+    ? firstPageImage.dataset.full === "true"
+    : needsFullImage();
+  if (tile.number === initialPage) firstPageImage = null;
   tile.upgrading = false;
+  let usedFallback = false;
+  const cacheBust = force ? "?retry=" + Date.now() : "";
   image.hidden = true;
   placeholder.hidden = false;
   label.textContent = "正在打开第 " + tile.number + " 页…";
@@ -180,9 +190,12 @@ function load(tile, force = false) {
   };
   image.onerror = () => {
     if (mounted.get(tile.number) !== tile) return;
-    if (!tile.full) {
-      tile.full = true;
-      image.src = imageUrl(tile, true);
+    if (!usedFallback) {
+      usedFallback = true;
+      // Keep the other rendition available if a request fails.
+      tile.upgrading = tile.full;
+      tile.full = !tile.full;
+      image.src = imageUrl(tile, tile.full) + cacheBust;
       return;
     }
     label.textContent = "这一页加载失败";
@@ -194,7 +207,7 @@ function load(tile, force = false) {
       scheduleWindow();
     }
   };
-  image.src = imageUrl(tile, false) + (force ? "?retry=" + Date.now() : "");
+  image.src = imageUrl(tile, tile.full) + cacheBust;
 }
 
 function mount(number, priority) {
