@@ -1,2 +1,10 @@
 *.pdf binary
 *.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.bcmap binary
+*.icc binary
+*.pfb binary
+*.ttf binary
+*.wasm binary

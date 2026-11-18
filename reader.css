@@ -1,0 +1,119 @@
+:root {
+  color-scheme: light;
+  color: #11161c;
+  background: #edf1f5;
+  font: 16px/1.5 system-ui, "Microsoft YaHei", sans-serif;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0;
+}
+
+.toolbar {
+  flex: none;
+  padding: env(safe-area-inset-top) max(10px, env(safe-area-inset-right)) 7px max(10px, env(safe-area-inset-left));
+  border-bottom: 1px solid #d5dce4;
+  background: white;
+}
+
+.toolbar-title, .toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 62rem;
+  margin: auto;
+}
+
+.toolbar-title { justify-content: space-between; gap: 9px; }
+
+h1 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 15px;
+  text-align: center;
+}
+
+a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #094c61;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+a:hover { text-decoration: underline; }
+
+button, input {
+  height: 42px;
+  border: 1px solid #d5dce4;
+  border-radius: 5px;
+  background: white;
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  flex: none;
+  width: 42px;
+  padding: 0;
+  font-size: 23px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:disabled { color: #737e8a; cursor: default; }
+
+input {
+  width: 4.2ch;
+  padding: 0 1px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+#page-total { color: #465161; font-size: 13px; white-space: nowrap; }
+.controls-gap { flex: 1; }
+
+#status {
+  padding: 10px 16px;
+  color: #465161;
+  background: #f7fafc;
+  font-size: 14px;
+}
+
+#reader-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 6px 6px max(6px, env(safe-area-inset-bottom));
+}
+
+.pdf-sheet {
+  position: relative;
+  width: max-content;
+  margin-inline: auto;
+  background: white;
+  box-shadow: 0 1px 3px #11161c26;
+}
+
+.pdf-sheet canvas { display: block; }
+
+.bookmark-marker {
+  position: absolute;
+  left: 0;
+  width: 3px;
+  height: 18px;
+  border-radius: 0 3px 3px 0;
+  background: #0e7490;
+  pointer-events: none;
+}
